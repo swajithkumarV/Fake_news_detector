@@ -3,21 +3,14 @@ import streamlit as st
 import joblib
 from pathlib import Path
 
-# -------------------------------
-# 1. Page Configuration
-# -------------------------------
+
 st.set_page_config(
     page_title="Fake News Detector",
     page_icon="📰",
     layout="centered"
 )
 
-# -------------------------------
-# 2. Text cleaning
-# MUST be identical to the clean_text used in the notebook for training.
-# If you did NOT add LEAK_PATTERNS in the notebook, delete that list
-# and the loop that uses it.
-# -------------------------------
+
 LEAK_PATTERNS = [
     r"\breuters\b", r"\bbreitbart\b", r"\bgetty images?\b",
     r"\bfeatured image\b", r"\btwitter com\b", r"\bpic twitter com\b",
@@ -42,15 +35,10 @@ def clean_text(s: str) -> str:
 # Mapping used in training: 0 = Real, 1 = Fake
 LABEL_NAMES = {0: "Real News", 1: "Fake News"}
 
-# -------------------------------
-# 3. App Title
-# -------------------------------
 st.title("📰 Fake News Detector")
 st.write("Enter a news headline and article to classify the news.")
 
-# -------------------------------
-# 4. Load Trained Model
-# -------------------------------
+
 MODEL_PATH = Path(__file__).parent.parent / "final_model_pipeline.pkl"
 
 
@@ -66,22 +54,22 @@ except Exception as e:
     st.info("Check that final_model_pipeline.pkl exists at the path set in MODEL_PATH.")
     st.stop()
 
-# -------------------------------
+
 # 5. User Inputs
-# -------------------------------
+
 headline = st.text_input("News Headline")
 article = st.text_area("News Article", height=200)
 
-# -------------------------------
+
 # 6. Prediction
-# -------------------------------
+
 if st.button("Check News", type="primary"):
 
     if not headline.strip() and not article.strip():
         st.warning("Please enter a headline or article.")
 
     else:
-        # FIX: clean the text exactly like in training
+        
         text = clean_text(f"{headline} {article}")
 
         if not text:
